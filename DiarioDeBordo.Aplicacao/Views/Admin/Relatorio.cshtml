@@ -1,0 +1,520 @@
+﻿@model DiarioDeBordo.Aplicacao.Models.ViewModelRelatorios
+@{
+    ViewData["Title"] = "Controle de Atividades";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+    var dados = TempData["Usuario"] as UsuarioLogado;
+}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>*@
+<script src="~/js/Diario/FiltroMinhasAtividades.js"></script>
+<script src="~/js/Chart.js"></script>
+<script src="~/js/excelexportjs.js"></script>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h1>Gráficos</h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+<br />
+
+<h3>Filtrar Por Data: </h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="panel-body">
+                <form asp-controller="Admin" asp-action="Relatorio" ajax="true">
+
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="DataInicio" class="control-label"></label>
+                                <input type="date" id="txtDataInicio" asp-for="DataInicio" class="form-control" />
+                                <span asp-validation-for="DataInicio" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="DataFim" class="control-label"></label>
+                                <input type="date" id="txtDataFim" asp-for="DataFim" class="form-control" />
+                                <span asp-validation-for="DataFim" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="dvjson"></div>
+                        <input type="submit" value="Consultar" class="btn btn-primary" />
+                        <input type="submit" id='DLtoExcel' class="btn btn-secondary" value="Exportar Exel" />
+                    </div>
+                    <div class="col-md-12">
+                        <canvas id="myChartFiltro" width="400" height="400" style="display:none"></canvas>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+
+
+
+
+@{
+    var XLabels4 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio2Teste.Select(x => x.Legenda).ToList());
+    var YValues4 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio2Teste.Select(x => x.Valor).ToList());
+    var total4 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio2Teste.Select(x => x.Valor).Sum());
+    ViewData["Title"] = "Bar Chart";
+}
+
+<div class="col-md-12">
+    <canvas id="myChart4" width="400" height="400"></canvas>
+</div>
+
+<script type="text/javascript">
+
+        $(function () {
+        var chartName = "myChart";
+            var ctx = document.getElementById("myChart4").getContext('2d');
+        var data = {
+                labels: @Html.Raw(XLabels4),
+                datasets: [{
+                    label: "Total de Atendimentos Por SR: " + @Html.Raw(total4),
+                    backgroundColor: [
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                        //'rgba(70,130,180, 0.2)',
+                    ],
+                    borderColor: [
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)',
+                        //'rgba(70,130,180,1)'
+
+
+
+                    ],
+                    borderWidth: 1,
+                    data: @Html.Raw(YValues4)
+                }]
+            };
+
+        var options = {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: true,
+                            color: "rgba(255,99,164,0.2)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            };
+
+       var myChart = new  Chart(ctx, {
+                options: options,
+                data: data,
+                type:'bar'
+
+            });
+        });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+@{
+    var XLabels = Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelatorioTeste.Select(x => x.Legenda).ToList());
+    var YValues = Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelatorioTeste.Select(x => x.Valor).ToList());
+    var total = Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelatorioTeste.Select(x => x.Valor).Sum());
+    ViewData["Title"] = "Bar Chart";
+}
+
+<div class="col-md-12">
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+<script type="text/javascript">
+
+        $(function () {
+        var chartName = "myChart";
+            var ctx = document.getElementById("myChart").getContext('2d');
+        var data = {
+                labels: @Html.Raw(XLabels),
+                datasets: [{
+                    label: "Total de Atendimentos Por Atividade: " + @Html.Raw(total),
+                    backgroundColor: [
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+                        //'rgba(46,139,87, 0.2)',
+
+                    ],
+                    borderColor: [
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+                        //'rgba(46,139,87,1)',
+
+
+
+
+                    ],
+                    borderWidth: 1,
+                    data: @Html.Raw(YValues)
+                }]
+            };
+
+        var options = {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: true,
+                            color: "rgba(255,99,164,0.2)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            };
+
+       var myChart = new  Chart(ctx, {
+                options: options,
+                data: data,
+                type:'bar'
+
+            });
+        });
+</script>
+
+
+
+
+
+
+
+<br />
+
+@{
+    var XLabels2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Legenda).ToList());
+    var YValues2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Valor).ToList());
+    var total2 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Valor).Sum());
+    ViewData["Title"] = "Bar Chart";
+}
+
+<div class="col-md-12">
+    <canvas id="myChart2" width="400" height="400"></canvas>
+</div>
+
+<script type="text/javascript">
+
+        $(function () {
+        var chartName = "myChart";
+            var ctx = document.getElementById("myChart2").getContext('2d');
+        var data = {
+                labels: @Html.Raw(XLabels2),
+                datasets: [{
+                    label: "Total de Atendentes: " + @Html.Raw(total2),
+                    backgroundColor: [
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+                        //'rgba(238,232,170, 0.2)',
+
+                    ],
+                    borderColor: [
+                        'rgba(238,232,170,1)',
+
+
+
+
+                    ],
+                    borderWidth: 1,
+                    data: @Html.Raw(YValues2)
+                }]
+            };
+
+        var options = {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: true,
+                            color: "rgba(255,99,164,0.2)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            };
+
+       var myChart = new  Chart(ctx, {
+                options: options,
+                data: data,
+                type:'bar'
+
+            });
+        });
+</script>
+
+
+
+
+
+
+<br />
+
+@{
+    var XLabels3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Legenda).ToList());
+    var YValues3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Valor).ToList());
+    var total3 = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Relatorio1Teste.Select(x => x.Valor).Sum());
+    ViewData["Title"] = "Bar Chart";
+}
+@*
+    <div class="col-md-12">
+        <canvas id="myChart3" width="400" height="400"></canvas>
+    </div>
+
+    <script type="text/javascript">
+
+            $(function () {
+            var chartName = "myChart";
+                var ctx = document.getElementById("myChart3").getContext('2d');
+            var data = {
+                    labels: ["Norte", "Nordeste", "Centro Oeste", "Sudeste"],
+                    datasets: [{
+                        label: "Total de Atendentes: " + @Html.Raw(total3),
+                        backgroundColor: [
+                            'rgba(70,130,180, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(70,130,180,1)',
+
+
+
+                        ],
+                        borderWidth: 1,
+                        data: @Html.Raw(YValues3)
+                    }]
+                };
+
+            var options = {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                beginAtZero: true
+                            },
+                            gridLines: {
+                                display: true,
+                                color: "rgba(255,99,164,0.2)"
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                min: 0,
+                                beginAtZero: true
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    }
+                };
+
+           var myChart = new  Chart(ctx, {
+                    options: options,
+                    data: data,
+                    type:'pie'
+
+                });
+            });
+    </script>*@
+
+
+
+
+<script>
+
+    //assuming you have a json data as above
+    //var data = [
+    //    { "firstName": "John", "lastName": "Doe" },
+    //    { "firstName": "Anna", "lastName": "Smith" },
+    //    { "firstName": "Peter", "lastName": "Jones" }
+    //]
+    var data = [
+        @Html.Raw(XLabels2),@Html.Raw(YValues2),
+        @Html.Raw(XLabels),@Html.Raw(YValues),
+        @Html.Raw(XLabels4),@Html.Raw(YValues4),
+    ]
+    @*var data = @Html.Raw(XLabels2);*@
+
+    var $btnDLtoExcel = $('#DLtoExcel');
+    $btnDLtoExcel.on('click', function () {
+        $("#dvjson").excelexportjs({
+            containerid: "dvjson"
+            , datatype: 'json'
+            , dataset: data
+            , columns: getColumns(data)
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36251023-1']);
+    _gaq.push(['_setDomainName', 'jqueryscript.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>

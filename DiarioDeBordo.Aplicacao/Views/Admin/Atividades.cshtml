@@ -1,0 +1,129 @@
+﻿@model DiarioDeBordo.Aplicacao.Models.Diario.AtividadesModel
+
+@{
+    ViewData["Title"] = "Atividades";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+    var dados = TempData["Usuario"] as UsuarioLogado;
+}
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>Atividades</h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+<br />
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="panel-body">
+                <form asp-action="Atividades" id="myForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (TempData["Messagem"] != null)
+                    {
+                    <p class="alert alert-info">@TempData["Messagem"]</p>
+
+                    }
+                    <div class="form-group">
+                        <label asp-for="DadosAtividade.Descricao" class="control-label"></label>
+                        <input asp-for="DadosAtividade.Descricao" class="form-control" required />
+                        <span asp-validation-for="DadosAtividade.Descricao" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-check col-md-6">
+                            <input asp-for="DadosAtividade.Quantidade" class="form-check-input" id="gridCheck">&emsp;
+                            <label asp-for="DadosAtividade.Quantidade" class="form-check-label" for="gridCheck"></label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input asp-for="DadosAtividade.NumProcesso" class="form-check-input" id="gridCheck2">&emsp;
+                            <label asp-for="DadosAtividade.NumProcesso" class="form-check-label" for="gridCheck2"></label>
+                        </div>
+                        <div class="col-sm-2" style="text-align:right">
+                            <label asp-for="DadosAtividade.Sistema" class="control-label"></label>
+                        </div>
+                        <div class="col-md-4">
+                            <select asp-items="@ViewBag.TipoAtendimento" asp-for="DadosAtividade.Sistema" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DadosAtividade.IdPai" class="control-label"></label>
+                        <div id="jstreeCad"></div>
+                        <input type="hidden" asp-for="DadosAtividade.IdPai" />
+                    </div>
+                    <input type="hidden" asp-for="DadosAtividade.Id" class="form-control" />
+                    <div class="form-group">
+                        <input type="submit" value="Salvar" class="btn btn-primary" id="btnSalvar" />
+                        <a class="btn btn-secondary" asp-area="" asp-controller="Admin" asp-action="Atividades">Limpar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<table class="table">
+    <thead>
+    <th>Lista de Atividades</th>
+    </thead>
+</table>
+<div id="jstree">
+</div>
+
+
+@section scripts{
+    <link href="~/lib/dist/themes/default/style.css" rel="stylesheet" />
+    <script src="~/lib/dist/jstree.min.js"></script>
+
+    <script type="text/javascript">
+             $('#btnSalvar').click(function() {
+                  location.reload(true);
+             });
+
+             $(function () {
+                $('#jstreeCad').on('changed.jstree', function (e, data) {
+                    var i, j;
+                    var id;
+                    for (i = 0, j = data.selected.length; i < j; i++) {
+                        id = data.selected[i];
+                    };
+                    $('#DadosAtividade_IdPai').val(id);
+                }).jstree({
+                    "core": {
+                            "themes": {
+                            "variant": "large",
+                            "theme" : "photonui",
+                            "icons": false,
+                            "dots":true
+                        },
+                        "data": @Html.Raw(ViewBag.Json)
+                    },
+                });
+            });
+            
+            $(function () {
+                $('#jstree').on('changed.jstree', function (e, data) {
+                    var i, j;
+                    for (i = 0, j = data.selected.length; i < j; i++) {
+                        window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/BuscarAtividade?id=" + data.selected[i];
+                    }
+                }).jstree({
+                    "core": {
+                        "themes": {
+                            "variant": "large",
+                            "icons": false,
+                        },
+
+                        "data": @Html.Raw(ViewBag.Json)
+                    },
+                });
+            });
+
+           
+    </script>
+}
+
+

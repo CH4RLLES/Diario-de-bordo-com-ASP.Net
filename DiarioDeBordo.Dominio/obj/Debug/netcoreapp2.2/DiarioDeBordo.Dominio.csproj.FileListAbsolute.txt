@@ -1,0 +1,14 @@
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.deps.json
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.dll
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.pdb
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Features.dll
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.ViewFeatures.dll
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Features.xml
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.ViewFeatures.xml
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.csprojAssemblyReference.cache
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.AssemblyInfoInputs.cache
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.AssemblyInfo.cs
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.csproj.CopyComplete
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.dll
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.pdb
+D:\Source\Repos\diariodebordo\DiarioDeBordo.Dominio\obj\Debug\netcoreapp2.2\DiarioDeBordo.Dominio.csproj.CoreCompileInputs.cache

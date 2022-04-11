@@ -1,0 +1,57 @@
+﻿@model Paginacao<DiarioDeBordo.Dominio.Entidades.AtividadeEfetuada>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UsuarioAtividade.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UsuarioAtividade.CPF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UsuarioAtividade.Superintendencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DataAtividade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IdAtividade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TipoAtendimento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ProcessoSEI)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioAtividade.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioAtividade.CPF)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioAtividade.Superintendencia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataAtividade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AtividadeFeita.Descricao)
+                </td>
+                <td>
+                    @item.TipoAtendimento.GetEnumDescription()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProcessoSEI)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

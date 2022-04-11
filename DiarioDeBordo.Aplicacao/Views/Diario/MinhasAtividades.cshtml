@@ -1,0 +1,112 @@
+﻿@model Paginacao<DiarioDeBordo.Dominio.Entidades.AtividadeEfetuada>
+
+@{
+    ViewData["Title"] = "Minhas Atividades";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+
+    var dados = TempData["Usuario"] as UsuarioLogado;
+}
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>Meu Histórico de Atividades</h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+<br />
+@Html.Partial("_FiltrosMinhasAtividades", new DiarioDeBordo.Aplicacao.Models.Diario.FiltroMinhasAtividades())
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DataAtividade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IdAtividade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Quantidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ProcessoSEI)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TipoAtendimento)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="result">
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataAtividade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AtividadeFeita.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessoSEI)
+            </td>
+            <td>
+                @item.AtividadeFeita.Sistema.GetEnumDescription()
+            </td>
+            <td>
+                <a asp-controller="Diario" asp-action="BuscarAtividadeEfetuada" asp-route-id="@item.Id" class="fa fa-pencil"></a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="MinhasAtividades"
+   asp-route-pagina="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Anterior
+</a>
+<a asp-action="MinhasAtividades"
+   asp-route-pagina="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Próxima
+</a>
+
+@section scripts{
+    <link href="~/lib/dist/themes/default/style.css" rel="stylesheet" />
+    <script src="~/lib/dist/jstree.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+                $('#jstree').on('changed.jstree', function (e, data) {
+                    var i, j;
+                    var id;
+                    for (i = 0, j = data.selected.length; i < j; i++) {
+                        id = data.selected[i];
+                    };
+                    $('#IdAtividade').val(id).trigger('change');
+                }).jstree({
+                    "core": {
+                        "themes": {
+                            "variant": "large",
+                            "icons": false,
+                        },
+                        "state" : { "key" : "demo2" },
+                        "data": @Html.Raw(ViewBag.Json)
+                    },
+                    "plugins": ["state"],
+                });
+        });
+    </script>
+}

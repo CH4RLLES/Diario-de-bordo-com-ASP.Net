@@ -1,0 +1,104 @@
+﻿@model DiarioDeBordo.Aplicacao.Models.Diario.UsuariosModel
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+    var dados = TempData["Usuario"] as UsuarioLogado;
+}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#nome').autocomplete({
+            source: '/DiarioDeBordo/Admin/PesquisaNome'
+        });
+    });
+</script>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h1>Usuários</h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="panel-body">
+                <form asp-controller="Admin" asp-action="Usuarios">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (TempData["Messagem"] != null)
+                    {
+                        <p class="alert alert-info">@TempData["Messagem"]</p>
+                    }
+                    <div class="form-group">
+                        <label asp-for="DadosUsuario.Nome" class="control-label"></label>
+                        <input asp-for="DadosUsuario.Nome" id="nome" class="form-control" required oninvalid="this.setCustomValidity('Campo obrigatório.')" oninput="this.setCustomValidity('')" />
+                        <span asp-validation-for="DadosUsuario.Nome" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DadosUsuario.Status" class="control-label"></label>
+                        <select asp-items="@ViewBag.Status" asp-for="DadosUsuario.Status" class="form-control" required oninvalid="this.setCustomValidity('Campo obrigatório.')" oninput="this.setCustomValidity('')"></select>
+                        <span asp-validation-for="DadosUsuario.Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DadosUsuario.ControleAcesso" class="control-label"></label>
+                        <select asp-items="@ViewBag.ControleAcesso" asp-for="DadosUsuario.ControleAcesso" class="form-control" required oninvalid="this.setCustomValidity('Campo obrigatório.')" oninput="this.setCustomValidity('')"></select>
+                        <span asp-validation-for="DadosUsuario.ControleAcesso" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="DadosUsuario.Id" />
+                    <div class="form-group">
+                        <input type="submit" value="Salvar" class="btn btn-primary" />
+                    </div>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        <br />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DadosUsuario.CPF)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DadosUsuario.Nome)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DadosUsuario.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DadosUsuario.ControleAcesso)
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ListaUsuarios)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CPF)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ControleAcesso)
+                        </td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="BuscarUsuario" asp-route-id="@item.Id" class="fa fa-pencil"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>

@@ -1,0 +1,187 @@
+﻿@model DiarioDeBordo.Aplicacao.Models.Diario.FiltroMinhasAtividades
+@{
+    ViewData["Title"] = "Controle de Atividades";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+    var dados = TempData["Usuario"] as UsuarioLogado;
+}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="~/js/Diario/FiltroControleAtividades.js"></script>
+@*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>*@
+
+<style>
+    #chart_container {
+        width: 400px;
+        height: 400px;
+        border: 1px solid #808080;
+        padding: 1px;
+        border-radius: 4px;
+    }
+</style>
+
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>Gerar Relatórios de Atividades</h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+<br />
+<script>
+    $(document).ready(function () {
+        $('#nome').autocomplete({
+            source: '/DiarioDeBordo/Admin/PesquisaNome'
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="panel-body">
+                <form asp-controller="Admin" asp-action="BuscarControleAtividades">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="DataInicio" class="control-label"></label>
+                                <input type="date" id="txtDataInicio" asp-for="DataInicio" class="form-control" />
+                                <span asp-validation-for="DataInicio" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="DataFim" class="control-label"></label>
+                                <input type="date" id="txtDataFim" asp-for="DataFim" class="form-control" />
+                                <span asp-validation-for="DataFim" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Colaborador" class="control-label"></label>
+                                <input asp-for="Colaborador" id="nome" class="form-control" />
+                                <span asp-validation-for="Colaborador" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Superintendencia" class="control-label"></label>
+                                <select asp-items="@ViewBag.Superintendencias" asp-for="Superintendencia" class="form-control"></select>
+                                <span asp-validation-for="Superintendencia" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="IdAtividade" class="control-label"></label>
+                                <div id="jstree"></div>
+                                <input type="hidden" asp-for="IdAtividade" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" id="btnConsultar" value="Consultar" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script src="~/js/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#jstree').on('changed.jstree', function (e, data) {
+                var i, j;
+                var id;
+                for (i = 0, j = data.selected.length; i < j; i++) {
+                    id = data.selected[i];
+                };
+                $('#IdAtividade').val(id).trigger('change');
+            }).jstree({
+                "core": {
+                    "themes": {
+                        "variant": "large",
+                        "icons": false,
+                    },
+                    "data": @Html.Raw(ViewBag.Json)
+                },
+            });
+        });
+    </script>
+}
+<br />
+<div style="display:none" id="divDados"></div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosUsuario.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosUsuario.CPF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosUsuario.Superintendencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosAtividade.DataAtividade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosAtividade.AtividadeFeita.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosAtividade.AtividadeFeita.Quantidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosAtividade.AtividadeFeita.Sistema)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DadosAtividade.AtividadeFeita.NumProcesso)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ if (Model.ListaAtividades != null)
+            {
+                foreach (var item in Model.ListaAtividades)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioAtividade.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioAtividade.CPF)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioAtividade.Superintendencia)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataAtividade)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AtividadeFeita.Descricao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantidade)
+                        </td>
+                        <td></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProcessoSEI)
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>

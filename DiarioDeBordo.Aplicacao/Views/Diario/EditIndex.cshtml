@@ -1,0 +1,168 @@
+﻿@model DiarioDeBordo.Aplicacao.Models.Diario.AtividadeEfetuadaModel
+
+@{
+    ViewData["Title"] = "Diário de Bordo";
+    Layout = "~/Views/Shared/_LayoutDiario.cshtml";
+
+    var dados = TempData["Usuario"] as UsuarioLogado;
+    
+}
+<script src="~/js/Diario/AtividadesEfetuadas.js"></script>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h1>Editar Atividades </h1>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <label><i class="fa fa-user"></i> @dados.Nome.CapitalizarNome()</label>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="panel-body">
+                <form asp-action="CadIndex" id="myForm" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (TempData["Messagem"] != null)
+                    {
+                        <div class="alert alert-info alert-dismissible">
+                            <a asp-controller="Diario" asp-action="Index" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            @TempData["Messagem"]
+                        </div>
+                    }
+                    <div class="alert alert-warning" id="caminhoAtividade">
+                        Selecione abaixo uma atividade para editar o seguinte registro: <hr />
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DadosAtividade.DataAtividade)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DadosAtividade.IdAtividade)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DadosAtividade.Quantidade)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DadosAtividade.ProcessoSEI)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DadosAtividade.TipoAtendimento)
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ListaAtividades)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DataAtividade)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.AtividadeFeita.Descricao)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Quantidade)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProcessoSEI)
+                                        </td>
+                                        <td>
+                                            @item.AtividadeFeita.Sistema.GetEnumDescription()
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DadosAtividade.DataAtividade" class="control-label"></label>
+                                <input type="date" id="txtData" asp-for="DadosAtividade.DataAtividade" class="form-control" required oninvalid="this.setCustomValidity('Campo obrigatório.')" oninput="this.setCustomValidity('')" />
+                                <span asp-validation-for="DadosAtividade.DataAtividade" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DadosAtividade.IdAtividade" class="control-label"></label>
+                                <div id="jstree"></div>
+                                <input type="hidden" asp-for="DadosAtividade.IdAtividade" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="divQuantidade" style="display:none">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DadosAtividade.Quantidade" class="control-label"></label>
+                                <input type="text" asp-for="DadosAtividade.Quantidade" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="divNumProcesso" style="display:none">
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                <label asp-for="DadosAtividade.ProcessoSEI" class="control-label"></label>
+                                <input type="text" asp-for="DadosAtividade.ProcessoSEI" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divMsg" class="alert alert-warning" role="alert">
+                        Por favor selecione uma atividade fim
+                    </div>
+                    <input type="hidden" asp-for="DadosAtividade.AtividadeFeita.Quantidade" class="form-control" />
+                    <input type="hidden" asp-for="DadosAtividade.AtividadeFeita.NumProcesso" class="form-control" />
+                    <input type="hidden" asp-for="DadosAtividade.Id" class="form-control" />
+                    <div class="form-group">
+                        <input type="submit" id="btnSalvar" value="Salvar" class="btn btn-primary" />
+                        <a class="btn btn-secondary" asp-area="" asp-controller="Diario" asp-action="Index">Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+@section scripts{
+
+    <link href="~/lib/dist/themes/default/style.css" rel="stylesheet" />
+    <script src="~/lib/dist/jstree.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+                $('#jstree').on('changed.jstree', function (e, data) {
+                    var i, j;
+                    var id;
+                    for (i = 0, j = data.selected.length; i < j; i++) {
+                        id = data.selected[i];
+                    };
+                    $('#DadosAtividade_IdAtividade').val(id).trigger('change');
+
+                }).jstree({
+                    "core": {
+                        "themes": {
+                            "variant": "large",
+                            "icons": false,
+                        },
+
+                        "state": {
+                            'opened': true,
+                            'selected': false
+                        },
+
+                        "data": @Html.Raw(ViewBag.Json),
+                        "multiple": false,
+                    },
+                });
+        });
+    </script>
+}
